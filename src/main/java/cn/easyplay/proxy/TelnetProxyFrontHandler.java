@@ -20,6 +20,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.DefaultHttpHeaders;
 import io.netty.handler.codec.http.HttpClientCodec;
+import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
@@ -71,8 +72,11 @@ public class TelnetProxyFrontHandler extends SimpleChannelInboundHandler<String>
 
 		// 启动WebSocketClient
 		EventLoopGroup group = ctx.channel().eventLoop();
+		HttpHeaders wsHeader=new DefaultHttpHeaders();
+		wsHeader.set("Accept-Encoding","gzip");
+		wsHeader.set("User-Agent","ok http/3.4.1");
 		final WebSocketClientHandler handler = new WebSocketClientHandler(WebSocketClientHandshakerFactory
-				.newHandshaker(uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders()), ctx.channel());
+				.newHandshaker(uri, WebSocketVersion.V13, null, false, wsHeader), ctx.channel());
 		LOGGER.debug("WebSocketClient启动");
 		Bootstrap b = new Bootstrap();
 		b.group(group).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
