@@ -61,8 +61,8 @@ public class OKHttpHandler extends SimpleChannelInboundHandler<String> {
 			}
 		}
      	OkHttpClient client=b.build();
-		Request request = new Request.Builder().url(url).addHeader("User-Agent", "okhttp/3.4.1").addHeader("Origin", "http://www.palmmud.com:8080").build();  
-		
+		Request request = new Request.Builder().url(url).removeHeader("User-Agent").addHeader("User-Agent", "okhttp/3.4.1").addHeader("origin", StringUtils.replaceAll(url, "ws(s?):\\/\\/(.+)", "http$1://$2")).build();  
+//		LOGGER.debug("origin="+request.header("origin"));
 //        WebSocketCall webSocketCall = WebSocketCall.create(client, request);  
         client.newWebSocket(request, new WebSocketListener() {
         	@Override
